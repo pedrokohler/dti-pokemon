@@ -1,5 +1,18 @@
 const fs = require('fs');
 
+const checkForMissingValue = (value) => {
+  if (value === undefined || value === '') {
+    throw new Error('Missing or invalid value');
+  }
+};
+
+const checkForMissinOrInvalidNumericValue = (value) => {
+  checkForMissingValue(value);
+  if (Number.isNaN(Number(value))) {
+    throw new Error(`Value ${value} is not numeric`);
+  }
+};
+
 const maybeConvertToNumber = (el) => (Number(el) ? Number(el) : el);
 
 const parseAttributeLine = (attributeLine) => {
@@ -7,7 +20,12 @@ const parseAttributeLine = (attributeLine) => {
     baseAttribute,
     individualValue,
     effortValue,
-  ] = attributeLine.split(' ').map(maybeConvertToNumber);
+  ] = attributeLine.split(' ')
+    .map(maybeConvertToNumber);
+
+  [baseAttribute, individualValue, effortValue]
+    .forEach(checkForMissinOrInvalidNumericValue);
+
   return {
     baseAttribute,
     individualValue,
@@ -22,7 +40,12 @@ const parseContender = (contenderLines) => {
     attack,
     defense,
     speed,
-  ] = contenderLines.slice(1).map(parseAttributeLine);
+  ] = contenderLines.slice(1)
+    .map(parseAttributeLine);
+
+  checkForMissinOrInvalidNumericValue(level);
+  [name, healthPoints, attack, defense, speed]
+    .forEach(checkForMissingValue);
 
   return {
     name,
@@ -37,11 +60,15 @@ const parseContender = (contenderLines) => {
 };
 
 const parseInput = (text) => {
-  const lines = text.toString().split(/\r?\n/); // LF or CRLF
-  const contenderA = lines.slice(0, 5);
-  const contenderB = lines.slice(5);
+  try {
+    const lines = text.toString().split(/\r?\n/); // LF or CRLF
+    const contenderA = lines.slice(0, 5);
+    const contenderB = lines.slice(5);
 
-  return [parseContender(contenderA), parseContender(contenderB)];
+    return [parseContender(contenderA), parseContender(contenderB)];
+  } catch (e) {
+    throw new Error(`PARSING ERROR: the file you provided cannot be correctly parsed: ${e.message}`);
+  }
 };
 
 const loadInput = (path) => new Promise((resolve, reject) => {
