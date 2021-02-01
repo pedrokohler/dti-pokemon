@@ -37,7 +37,7 @@ const parseContender = (contenderLines) => {
 };
 
 const parseInput = (text) => {
-  const lines = text.toString().split('\n');
+  const lines = text.toString().split(/\r?\n/); // LF or CRLF
   const contenderA = lines.slice(0, 5);
   const contenderB = lines.slice(5);
 
