@@ -4,8 +4,10 @@ const computeGeneralAttribute = (multiplierShift, finalShift) => ({
   individualValue,
   level,
 }) => {
-  const multiplier = individualValue + baseAttribute
-  + (Math.sqrt(effortValue) / 8) + multiplierShift;
+  const multiplier = individualValue
+    + baseAttribute
+    + (Math.sqrt(effortValue) / 8)
+    + multiplierShift;
   const attribute = (level * multiplier) / 50 + finalShift;
   return Math.floor(attribute);
 };
