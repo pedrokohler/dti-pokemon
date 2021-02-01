@@ -1,7 +1,7 @@
 const { computeWinner } = require('./domain/battle');
 const { convertInputIntoPokemon } = require('./domain/converter');
 const loadInput = require('./services/input');
-const formatOutput = require('./services/output');
+const { stringifyOutput } = require('./services/output');
 
 const inputPath = process.argv[2];
 
@@ -9,7 +9,7 @@ const inputPath = process.argv[2];
   const input = await loadInput(inputPath);
   const pokemons = input.map(convertInputIntoPokemon);
   const winner = computeWinner(...pokemons);
-  const output = formatOutput(winner);
+  const output = stringifyOutput(pokemons, winner);
   // eslint-disable-next-line no-console
   console.log(output);
 })();
