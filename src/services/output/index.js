@@ -16,7 +16,7 @@ const stringifyPokemon = ({
 
 const stringifyOutput = (pokemons, winner) => pokemons
   .map(stringifyPokemon)
-  .reduce((acc, pokemon) => acc + pokemon, '')
+  .join('')
   + stringifyWinner(winner);
 
 module.exports = { stringifyWinner, stringifyPokemon, stringifyOutput };
